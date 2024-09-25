@@ -1,5 +1,6 @@
 from django.db import models
 
+
 # Create your models here.
 class Category(models.Model):
     name = models.CharField(
@@ -61,6 +62,12 @@ class Product(models.Model):
         blank=True,
         null=True,
     )
+    views_counter = models.PositiveIntegerField(
+        verbose_name="Счетчик просмотров",
+        help_text="Укажите количество просмотров",
+        default=0
+    )
+
 
     class Meta:
         verbose_name = "Продукт"
