@@ -9,9 +9,9 @@ class StyleFormMixin:
         super().__init__(*args, **kwargs)
         for field_name, field in self.fields.items():
             if isinstance(field, BooleanField):
-                field.widget.attrs['class'] = "form-check-input"
+                field.widget.attrs["class"] = "form-check-input"
             else:
-                field.widget.attrs['class'] = "form-control"
+                field.widget.attrs["class"] = "form-control"
 
 
 class ProductForm(StyleFormMixin, ModelForm):
@@ -28,7 +28,9 @@ class ProductForm(StyleFormMixin, ModelForm):
         for part_name in name_list:
             for part_name in self.lock_words:
                 if part_name.lower() in product_name.lower():
-                    raise ValidationError(f"В названии продукта не должно быть слова '{part_name}' ")
+                    raise ValidationError(
+                        f"В названии продукта не должно быть слова '{part_name}' "
+                    )
 
         return product_name
 
@@ -38,7 +40,9 @@ class ProductForm(StyleFormMixin, ModelForm):
         for part_description in description_list:
             for part_description in self.lock_words:
                 if part_description.lower() in description.lower():
-                    raise ValidationError(f"В описании продукта не должно быть слова '{part_description}' ")
+                    raise ValidationError(
+                        f"В описании продукта не должно быть слова '{part_description}' "
+                    )
 
         return description
 
@@ -46,7 +50,7 @@ class ProductForm(StyleFormMixin, ModelForm):
 class VersionForm(StyleFormMixin, ModelForm):
     class Meta:
         model = Version
-        fields = '__all__'
+        fields = "__all__"
         # exclude = ("views_counter",)
 
     """def clean_active(self):

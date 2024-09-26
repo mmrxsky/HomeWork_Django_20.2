@@ -6,6 +6,7 @@ from myblog.models import Myblog
 
 # Register your models here.
 
+
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
     list_display = ("id", "name", "price", "category")
@@ -21,7 +22,6 @@ class CategoryAdmin(admin.ModelAdmin):
 @admin.register(Myblog)
 class MyblogAdmin(admin.ModelAdmin):
     list_display = ("id", "title")
-
 
     @admin.register(Version)
     class VersionAdmin(admin.ModelAdmin):
