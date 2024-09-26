@@ -1,6 +1,7 @@
 from django.db import models
 from datetime import datetime
 
+
 # Create your models here.
 class Category(models.Model):
     name = models.CharField(
@@ -123,7 +124,7 @@ class Version(models.Model):
     active = models.BooleanField(
         verbose_name="Признак текущей версии",
         help_text="Введите признак текущей версии продукта",
-        default=False
+        default=False,
     )
 
     class Meta:
