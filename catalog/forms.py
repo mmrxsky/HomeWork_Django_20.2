@@ -18,7 +18,7 @@ class ProductForm(StyleFormMixin, ModelForm):
     class Meta:
         model = Product
         # fields = '__all__'
-        exclude = ("views_counter",)
+        exclude = ("views_counter", "owner")
 
     lock_words = ["казино", "халява", "дешево", "бесплатно"]
 
