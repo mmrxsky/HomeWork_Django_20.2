@@ -1,5 +1,6 @@
 from django.db import models
-from datetime import datetime
+
+from users.models import User
 
 
 # Create your models here.
@@ -67,6 +68,15 @@ class Product(models.Model):
         verbose_name="Счетчик просмотров",
         help_text="Укажите количество просмотров",
         default=0,
+    )
+
+    owner = models.ForeignKey(
+        User,
+        verbose_name="Владелец",
+        help_text="Укажите владельца продукта",
+        blank=True,
+        null=True,
+        on_delete=models.SET_NULL,
     )
 
     class Meta:

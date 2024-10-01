@@ -1,3 +1,5 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.exceptions import PermissionDenied
 from django.forms import inlineformset_factory
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse_lazy, reverse
@@ -36,14 +38,22 @@ class ProductDetailView(DetailView):
         return self.object
 
 
-class ProductCreateView(CreateView):
+class ProductCreateView(LoginRequiredMixin, CreateView):
     model = Product
     form_class = ProductForm
     # fields = ("name", "description", "photo", "category", "price", "created_at", "updated_at", "manufactured_at")
     success_url = reverse_lazy("catalog:products_list")
 
+    def form_valid(self, form):
+        product = form.save()
+        user = self.request.user
+        product.owner = user
+        product.save()
 
-class ProductUpdateView(UpdateView):
+        return super().form_valid(form)
+
+
+class ProductUpdateView(LoginRequiredMixin, UpdateView):
     model = Product
     form_class = ProductForm
     # fields = ("name", "description", "photo", "category", "price", "created_at", "updated_at", "manufactured_at")
@@ -77,6 +87,6 @@ class ProductUpdateView(UpdateView):
             )
 
 
-class ProductDeleteView(DeleteView):
+class ProductDeleteView(LoginRequiredMixin, DeleteView):
     model = Product
     success_url = reverse_lazy("catalog:products_list")
