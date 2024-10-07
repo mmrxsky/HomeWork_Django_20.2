@@ -11,7 +11,7 @@ from django.views.generic import (
     DeleteView,
 )
 
-from catalog.forms import ProductForm, VersionForm
+from catalog.forms import ProductForm, VersionForm, ProductModeratorForm
 from catalog.models import Product, Version
 
 
@@ -28,14 +28,16 @@ class ProductListView(ListView):
         return context_data
 
 
-class ProductDetailView(DetailView):
+class ProductDetailView(LoginRequiredMixin, DetailView):
     model = Product
 
     def get_object(self, queryset=None):
         self.object = super().get_object(queryset)
-        self.object.views_counter += 1
-        self.object.save()
-        return self.object
+        if self.request.user == self.object.owner:
+            self.object.views_counter += 1
+            self.object.save()
+            return self.object
+        raise PermissionDenied
 
 
 class ProductCreateView(LoginRequiredMixin, CreateView):
@@ -85,6 +87,32 @@ class ProductUpdateView(LoginRequiredMixin, UpdateView):
             return self.render_to_response(
                 self.get_context_data(form=form, formset=formset)
             )
+
+    def get_form_class(self):
+        user = self.request.user
+        if (
+            user.has_perm("catalog.set_published_status")
+            and user.has_perm("catalog.can_edit_category")
+            and user.has_perm("catalog.can_edit_description")
+        ):
+            return ProductModeratorForm
+        # if user == self.object.owner:
+        if user == self.object.owner:
+            return ProductForm
+        # if user.has_perm("catalog.can_edit_category") and user.has_perm("catalog.can_edit_description"):
+        else:
+            raise PermissionDenied
+
+    """def get_form_class(self):
+        # Метод для выбора формы в зависимости от прав доступа пользователя
+        # от куратора: лучше, чем у меня
+        user = self.request.user  # Получаем текущего пользователя
+        if user == self.object.owner:
+            return ProductForm
+        elif user.groups.filter(name="moderator").exists():
+            return ProductModeratorForm
+        else:
+            raise PermissionDenied"""
 
 
 class ProductDeleteView(LoginRequiredMixin, DeleteView):
