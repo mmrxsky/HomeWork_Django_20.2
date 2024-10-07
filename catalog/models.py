@@ -69,6 +69,7 @@ class Product(models.Model):
         help_text="Укажите количество просмотров",
         default=0,
     )
+    is_published = models.BooleanField(default=False, verbose_name="Опубликовано")
 
     owner = models.ForeignKey(
         User,
@@ -83,6 +84,11 @@ class Product(models.Model):
         verbose_name = "Продукт"
         verbose_name_plural = "Продукты"
         ordering = ["category", "name"]
+        permissions = [
+            ("can_edit_category", "can_edit_category"),
+            ("can_edit_description", "can_edit_description"),
+            ("set_published_status", "Can published product"),
+        ]
 
     def __str__(self):
         return self.name
