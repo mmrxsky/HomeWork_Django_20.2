@@ -13,10 +13,13 @@ from django.views.generic import (
 
 from catalog.forms import ProductForm, VersionForm, ProductModeratorForm
 from catalog.models import Product, Version
-
+from catalog.services import get_products_from_cache
 
 class ProductListView(ListView):
     model = Product
+
+    def get_queryset(self):
+        return get_products_from_cache()
 
     def get_context_data(self, *args, object_list=None, **kwargs):
         context_data = super().get_context_data(**kwargs)
