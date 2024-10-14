@@ -15,6 +15,7 @@ from catalog.forms import ProductForm, VersionForm, ProductModeratorForm
 from catalog.models import Product, Version
 from catalog.services import get_products_from_cache
 
+
 class ProductListView(ListView):
     model = Product
 
